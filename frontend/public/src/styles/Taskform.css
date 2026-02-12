@@ -1,0 +1,77 @@
+.task-form-card {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.task-form-card h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 24px;
+}
+
+.task-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.btn-cancel,
+.btn-submit {
+  flex: 1;
+  padding: 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 15px;
+  transition: var(--transition);
+}
+
+.btn-cancel {
+  background: var(--light);
+  color: var(--gray);
+}
+
+.btn-cancel:hover {
+  background: var(--border);
+  color: var(--dark);
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .task-form-card {
+    padding: 24px 20px;
+  }
+}

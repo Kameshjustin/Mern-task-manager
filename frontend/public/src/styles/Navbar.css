@@ -1,0 +1,84 @@
+.navbar {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.navbar-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-brand h2 {
+  font-size: 24px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+.navbar-user {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.user-name {
+  font-weight: 600;
+  color: var(--dark);
+}
+
+.btn-logout {
+  padding: 10px 20px;
+  background: var(--danger);
+  color: white;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: var(--transition);
+}
+
+.btn-logout:hover {
+  background: #b71c1c;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+}
+
+@media (max-width: 600px) {
+  .user-name {
+    display: none;
+  }
+
+  .navbar-brand h2 {
+    font-size: 20px;
+  }
+}

@@ -1,0 +1,136 @@
+.dashboard {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.dashboard-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 20px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  background: white;
+  padding: 32px;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 4px;
+}
+
+.dashboard-header p {
+  color: var(--gray);
+  font-size: 16px;
+}
+
+.task-form-container {
+  margin-bottom: 32px;
+}
+
+.filters-section {
+  margin-bottom: 24px;
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.filter-select {
+  padding: 12px 16px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  background: var(--light);
+  cursor: pointer;
+  transition: var(--transition);
+  min-width: 150px;
+}
+
+.filter-select:hover {
+  border-color: var(--primary);
+}
+
+.filter-select:focus {
+  border-color: var(--primary);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+}
+
+.tasks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 24px;
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 80px 20px;
+  background: white;
+  border-radius: 20px;
+  color: var(--gray);
+  font-size: 18px;
+}
+
+.loading-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.loader {
+  width: 60px;
+  height: 60px;
+  border: 5px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-header {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .dashboard-header h1 {
+    font-size: 24px;
+  }
+
+  .tasks-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filters {
+    flex-direction: column;
+  }
+
+  .filter-select {
+    width: 100%;
+  }
+}

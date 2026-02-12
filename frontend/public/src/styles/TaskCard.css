@@ -1,0 +1,144 @@
+.task-card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: var(--transition);
+  border: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.task-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+  border-color: var(--primary);
+}
+
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.task-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.task-body {
+  flex: 1;
+}
+
+.task-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.task-description {
+  color: var(--gray);
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.task-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.tag {
+  background: var(--light);
+  color: var(--primary);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.task-footer {
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.task-dates {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.date-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.date-label {
+  color: var(--gray);
+  font-weight: 500;
+}
+
+.date-value {
+  color: var(--dark);
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.task-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-edit,
+.btn-delete {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: var(--transition);
+}
+
+.btn-edit {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-edit:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
+}
+
+.btn-delete {
+  background: var(--light);
+  color: var(--danger);
+}
+
+.btn-delete:hover {
+  background: var(--danger);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+}
