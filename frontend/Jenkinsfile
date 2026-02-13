@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         AWS_REGION = "eu-north-1"
-        S3_BUCKET = "taskmanager"
+        S3_BUCKET = "taskmanager0123"
         CLOUDFRONT_DISTRIBUTION_ID = "E23JNKTP2I50R3"
         // This helps resolve issues with older Node.js versions and OpenSSL
         NODE_OPTIONS = "--openssl-legacy-provider"
@@ -52,10 +52,9 @@ pipeline {
 
         stage('Deploy to S3') {
             steps {
-                // Ensure 'react1126' exists in Jenkins -> Credentials
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'taskmanager'
+                    credentialsId: 'taskmanager0123'
                 ]]) {
                     dir('frontend') {
                         echo "Syncing build folder to S3 bucket: ${S3_BUCKET}"
@@ -72,7 +71,7 @@ pipeline {
             steps {
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'taskmanager'
+                    credentialsId: 'taskmanager0123'
                 ]]) {
                     echo "Invalidating CloudFront cache for: ${CLOUDFRONT_DISTRIBUTION_ID}"
                     sh "aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION_ID} --paths '/*'"
