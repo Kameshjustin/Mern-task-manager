@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         AWS_REGION = "eu-north-1"
-        S3_BUCKET = "taskmanager0123"
+        S3_BUCKET = "taskmanager-frontend123"
         CLOUDFRONT_DISTRIBUTION_ID = "E23JNKTP2I50R3"
         // This helps resolve issues with older Node.js versions and OpenSSL
         NODE_OPTIONS = "--openssl-legacy-provider"
