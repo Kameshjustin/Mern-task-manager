@@ -3,82 +3,54 @@ import axios from 'axios';
 
 const AuthContext = createContext();
 
+// Replace with your actual backend URL
+const API_URL = 'http://localhost:5001/api';
+
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
-  }
-  return context;
+    const context = useContext(AuthContext);
+    if (!context) throw new Error('useAuth must be used within an AuthProvider');
+    return context;
 };
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState(localStorage.getItem('token'));
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-  // Set axios default headers
-  useEffect(() => {
-    if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      loadUser();
-    } else {
-      setLoading(false);
-    }
-  }, [token]);
+    useEffect(() => {
+        const initializeAuth = async () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                try {
+                    const res = await axios.get(`${API_URL}/auth/me`);
+                    setUser(res.data.user);
+                } catch (err) {
+                    localStorage.removeItem('token');
+                    delete axios.defaults.headers.common['Authorization'];
+                }
+            }
+            setLoading(false);
+        };
+        initializeAuth();
+    }, []);
 
-  const loadUser = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/api/auth/me');
-      setUser(response.data.user);
-    } catch (error) {
-      console.error('Load user error:', error);
-      logout();
-    } finally {
-      setLoading(false);
-    }
-  };
+    const login = async (email, password) => {
+        const res = await axios.post(`${API_URL}/auth/login`, { email, password });
+        localStorage.setItem('token', res.data.token);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
+        setUser(res.data.user);
+        return res.data;
+    };
 
-  const login = async (email, password) => {
-    const response = await axios.post('http://localhost:5000/api/auth/login', {
-      email,
-      password
-    });
-    const { token: newToken, user: userData } = response.data;
-    localStorage.setItem('token', newToken);
-    setToken(newToken);
-    setUser(userData);
-    return response.data;
-  };
+    const logout = () => {
+        localStorage.removeItem('token');
+        delete axios.defaults.headers.common['Authorization'];
+        setUser(null);
+    };
 
-  const register = async (username, email, password) => {
-    const response = await axios.post('http://localhost:5000/api/auth/register', {
-      username,
-      email,
-      password
-    });
-    const { token: newToken, user: userData } = response.data;
-    localStorage.setItem('token', newToken);
-    setToken(newToken);
-    setUser(userData);
-    return response.data;
-  };
-
-  const logout = () => {
-    localStorage.removeItem('token');
-    delete axios.defaults.headers.common['Authorization'];
-    setToken(null);
-    setUser(null);
-  };
-
-  const value = {
-    user,
-    token,
-    loading,
-    login,
-    register,
-    logout,
-    isAuthenticated: !!user
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+    return (
+        <AuthContext.Provider value={{ user, loading, login, logout, isAuthenticated: !!user }}>
+            {children}
+        </AuthContext.Provider>
+    );
 };

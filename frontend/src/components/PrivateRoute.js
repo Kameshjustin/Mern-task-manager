@@ -3,17 +3,15 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const PrivateRoute = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth();
+    const { isAuthenticated, loading } = useAuth();
 
-  if (loading) {
-    return (
-      <div className="loading-container">
-        <div className="loader"></div>
-      </div>
-    );
-  }
+    // If still checking for a token, show a simple loading message
+    if (loading) {
+        return <div style={{ textAlign: 'center', marginTop: '50px' }}>Loading...</div>;
+    }
 
-  return isAuthenticated ? children : <Navigate to="/login" />;
+    // If not authenticated, redirect to login
+    return isAuthenticated ? children : <Navigate to="/login" />;
 };
 
 export default PrivateRoute;
