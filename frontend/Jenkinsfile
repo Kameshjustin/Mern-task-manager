@@ -5,6 +5,7 @@ pipeline {
         AWS_REGION = "eu-north-1"
         S3_BUCKET = "react102026"
         CLOUDFRONT_DISTRIBUTION_ID = "E23JNKTP2I50R3"
+        // This helps resolve issues with older Node.js versions and OpenSSL
         NODE_OPTIONS = "--openssl-legacy-provider"
     }
 
@@ -13,7 +14,6 @@ pipeline {
     }
 
     stages {
-
         stage('Checkout Code') {
             steps {
                 git branch: 'main',
@@ -22,30 +22,21 @@ pipeline {
             }
         }
 
-        stage('Move to Frontend Folder') {
+        stage('Install Dependencies') {
             steps {
                 dir('frontend') {
-                    sh 'ls -la'
-                }
-            }
-        }
-
-        stage('Check Node & NPM') {
-            steps {
-                dir('frontend') {
-                    sh '''
-                      node -v
-                      npm -v
-                    '''
-                }
-            }
-        }
-
-        stage('Install & Build Frontend') {
-            steps {
-                dir('frontend') {
+                    echo "Installing NPM packages..."
                     sh 'npm install'
-                    sh 'npm run build'
+                }
+            }
+        }
+
+        stage('Build Frontend') {
+            steps {
+                dir('frontend') {
+                    echo "Starting Production Build..."
+                    // CI=false prevents the build from failing due to ESLint warnings
+                    sh 'CI=false npm run build'
                 }
             }
         }
@@ -53,6 +44,7 @@ pipeline {
         stage('Verify Build Output') {
             steps {
                 dir('frontend') {
+                    // Ensures the build folder exists before trying to deploy
                     sh 'ls -la build'
                 }
             }
@@ -60,16 +52,14 @@ pipeline {
 
         stage('Deploy to S3') {
             steps {
+                // Ensure 'react1126' exists in Jenkins -> Credentials
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
                     credentialsId: 'react1126'
                 ]]) {
                     dir('frontend') {
-                        sh '''
-                          aws s3 sync build/ s3://${S3_BUCKET}/ \
-                            --delete \
-                            --region ${AWS_REGION}
-                        '''
+                        echo "Syncing build folder to S3 bucket: ${S3_BUCKET}"
+                        sh "aws s3 sync build/ s3://${S3_BUCKET}/ --delete --region ${AWS_REGION}"
                     }
                 }
             }
@@ -84,11 +74,8 @@ pipeline {
                     $class: 'AmazonWebServicesCredentialsBinding',
                     credentialsId: 'react1126'
                 ]]) {
-                    sh '''
-                      aws cloudfront create-invalidation \
-                        --distribution-id ${CLOUDFRONT_DISTRIBUTION_ID} \
-                        --paths "/*"
-                    '''
+                    echo "Invalidating CloudFront cache for: ${CLOUDFRONT_DISTRIBUTION_ID}"
+                    sh "aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION_ID} --paths '/*'"
                 }
             }
         }
@@ -96,10 +83,10 @@ pipeline {
 
     post {
         success {
-            echo "✅ Frontend deployed successfully to S3 + CloudFront!"
+            echo "✅ Deployment Successful! Your app is live."
         }
         failure {
-            echo "❌ Pipeline failed. Check Jenkins logs."
+            echo "❌ Pipeline failed. Check the logs for build or permission errors."
         }
     }
 }

@@ -46,4 +46,6 @@ class TaskService {
   }
 }
 
-export default new TaskService();
+// Fixed: Assign instance to a variable before exporting
+const taskServiceInstance = new TaskService();
+export default taskServiceInstance;
