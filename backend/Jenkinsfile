@@ -52,7 +52,7 @@ pipeline {
                        
                        
                         docker run -d -p 5001:5001 --name Backend-container \
-                        -e MONGO_URI="${MONGO_URL}" \
+                        -e MONGODB_URI="${MONGO_URL}" \
                          mern-task-backend
 EOF
                     """
