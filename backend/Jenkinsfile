@@ -2,16 +2,17 @@ pipeline {
     agent any
    
     environment {
-        EC2_IP = "56.228.66.202"
-        MONGO_URL = credentials('MONGODB_URI') 
+        EC2_IP = "13.49.90.144"
+        MONGO_URL = credentials('MONGODB_URI')
     }
    
     stages {
         stage('checkout code') {
             steps {
+               
                 git branch: 'main',
                 credentialsId: 'frontend-credentials',
-                url: 'git@github.com:Kameshjustin/Mern-task-manager.git'
+                url: 'https://github.com/Kameshjustin/Mern-task-manager.git'
             }
         }
        
@@ -24,8 +25,14 @@ pipeline {
                         mkdir -p /home/ubuntu/apps
                         cd /home/ubuntu/apps
                        
+                       
+                        if [ -d "Mern-task-manager" ] && [ ! -d "Mern-task-manager/.git" ]; then
+                           rm -rf Mern-task-manager
+                        fi
+                       
+                       
                         if [ ! -d "Mern-task-manager" ]; then
-                           git clone git@github.com:Kameshjustin/Mern-task-manager.git
+                           git clone https://github.com/Kameshjustin/Mern-task-manager.git
                         fi
                        
                         cd Mern-task-manager
@@ -35,19 +42,18 @@ pipeline {
                        
                         cd backend
                      
+                     
                         docker stop Backend-container || true
                         docker rm Backend-container || true
                         docker rmi mern-task-backend || true
  
-
+                       
                         docker build -t mern-task-backend .
                        
-
-                        docker run -d \
-                          --name Backend-container \
-                          -p 5001:5001 \
-                          -e MONGO_URI="${MONGO_URL}" \
-                          mern-task-backend
+                       
+                        docker run -d -p 5001:5001 --name Backend-container \
+                        -e MONGO_URI="${MONGO_URL}" \
+                         mern-task-backend
 EOF
                     """
                 }
@@ -56,7 +62,12 @@ EOF
     }
    
     post {
-        success { echo "🚀 DEPLOYMENT SUCCESSFUL" }
-        failure { echo "❌ DEPLOYMENT FAILED - Check Jenkins Console Output" }
+        success {
+            echo " DEPLOYMENT SUCCESSFUL"
+        }
+        failure {
+            echo " DEPLOYMENT FAILED"
+        }
     }
-}
+}  
+
