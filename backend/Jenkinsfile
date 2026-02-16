@@ -10,14 +10,14 @@ pipeline {
         stage('checkout code') {
             steps {
                 git branch: 'main',
-                credentialsId: 'task-manager1234ssh',
+                credentialsId: 'frontend-credentials',
                 url: 'git@github.com:Kameshjustin/Mern-task-manager.git'
             }
         }
        
         stage('Deploy to EC2') {
             steps {
-                sshagent(['ec2-ssh-key']) {
+                sshagent(['task-manager1234ssh']) {
                     sh """
                     ssh -o StrictHostKeyChecking=no ubuntu@${EC2_IP} << 'EOF'
                         set -e
