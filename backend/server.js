@@ -3,43 +3,59 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 
-// Load environment variables
+// 1. LOAD ENVIRONMENT VARIABLES FIRST
+// This must happen before you import routes or use process.env
 dotenv.config();
-
-// Import routes
-const authRoutes = require('./routes/auth');
-const taskRoutes = require('./routes/tasks');
 
 const app = express();
 
-// --- 1. MIDDLEWARE ---
+// 2. IMPORT ROUTES 
+// Importing after dotenv.config() ensures routes have access to JWT_SECRET
+const authRoutes = require('./routes/auth');
+const taskRoutes = require('./routes/tasks');
+
+// --- 3. MIDDLEWARE ---
 app.use(cors());
-app.use(express.json()); 
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// --- 2. DATABASE CONNECTION ---
-mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('✅ MongoDB connected successfully'))
-    .catch((err) => console.error('❌ MongoDB connection error:', err));
+// --- 4. DATABASE CONNECTION ---
+// Using MONGODB_URL to match exactly what is in your .env file
+const dbURI = process.env.MONGODB_URL;
 
-// --- 3. ROUTES ---
+if (!dbURI) {
+    console.error('❌ Error: MONGODB_URL is not defined in the .env file');
+    process.exit(1); // Stop the server if DB URL is missing
+}
 
-// Root route to prevent "Cannot GET /"
+mongoose.connect(dbURI)
+  .then(() => console.log('✅ MongoDB connected successfully'))
+  .catch((err) => {
+    console.error('❌ MongoDB connection error:');
+    console.error(err);
+  });
+
+// --- 5. ROUTES ---
+// Root route
 app.get('/', (req, res) => {
-    res.send('TaskFlow API is running. Use /api/health to check status.');
+  res.send('TaskFlow API is running. Use /api/health to check status.');
 });
 
 // Health check
 app.get('/api/health', (req, res) => {
-    res.json({ status: 'OK', message: 'Task Manager API is running' });
+  res.json({ 
+    status: 'OK', 
+    message: 'Task Manager API is running',
+    dbStatus: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'
+  });
 });
 
 // Feature routes
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 
-// --- 4. START SERVER ---
+// --- 6. START SERVER ---
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
