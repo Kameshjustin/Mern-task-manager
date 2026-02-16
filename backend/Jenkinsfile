@@ -2,7 +2,7 @@ pipeline {
     agent any
    
     environment {
-        EC2_IP = "13.49.90.144"
+        EC2_IP = "56.228.66.202"
         MONGO_URL = credentials('MONGODB_URI')
     }
    
@@ -70,4 +70,3 @@ EOF
         }
     }
 }  
-
